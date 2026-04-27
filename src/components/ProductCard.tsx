@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export interface ProductReview {
 	usuario: string;
@@ -21,6 +21,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
 	imagen,
 	reseñas = [],
 }) => {
+	const [agregado, setAgregado] = useState(false);
+	const [mostrarReseñas, setMostrarReseñas] = useState(false);
+
 	const precioFormateado = new Intl.NumberFormat('es-CO', {
 		style: 'currency',
 		currency: 'COP',
@@ -35,23 +38,44 @@ const ProductCard: React.FC<ProductCardProps> = ({
 				<p className="product-card__description">{descripcion}</p>
 				<p className="product-card__price">{precioFormateado}</p>
 
-				<section className="product-card__reviews" aria-label="Reseñas del producto">
-					<h3>Reseñas</h3>
-					{reseñas.length > 0 ? (
-						<ul>
-							{reseñas.map((reseña, index) => (
-								<li key={`${reseña.usuario}-${reseña.fecha}-${index}`}>
-									<p>
-										<strong>{reseña.usuario}:</strong> {reseña.texto}
-									</p>
-									<small>{reseña.fecha}</small>
-								</li>
-							))}
-						</ul>
-					) : (
-						<p>No hay reseñas disponibles.</p>
-					)}
-				</section>
+				<div className="product-card__actions">
+					<button
+						type="button"
+						className={`product-card__button product-card__button--cart${agregado ? ' is-added' : ''}`}
+						onClick={() => setAgregado(true)}
+						disabled={agregado}
+					>
+						{agregado ? 'Agregado ✅' : 'Agregar al carrito'}
+					</button>
+
+					<button
+						type="button"
+						className="product-card__button product-card__button--toggle"
+						onClick={() => setMostrarReseñas((estadoAnterior) => !estadoAnterior)}
+					>
+						{mostrarReseñas ? 'Ocultar reseñas' : 'Mostrar reseñas'}
+					</button>
+				</div>
+
+				{mostrarReseñas ? (
+					<section className="product-card__reviews" aria-label="Reseñas del producto">
+						<h3>Reseñas</h3>
+						{reseñas.length > 0 ? (
+							<ul>
+								{reseñas.map((reseña, index) => (
+									<li key={`${reseña.usuario}-${reseña.fecha}-${index}`}>
+										<p>
+											<strong>{reseña.usuario}:</strong> {reseña.texto}
+										</p>
+										<small>{reseña.fecha}</small>
+									</li>
+								))}
+							</ul>
+						) : (
+							<p>No hay reseñas disponibles.</p>
+						)}
+					</section>
+				) : null}
 			</div>
 		</article>
 	);
