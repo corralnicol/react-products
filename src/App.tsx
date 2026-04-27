@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import ProductCard, { type ProductCardProps } from './components/ProductCard';
+import { BASE } from './consts';
 import './App.css';
 
 interface Producto extends ProductCardProps {
@@ -14,7 +15,7 @@ function App() {
   useEffect(() => {
     const cargarProductos = async () => {
       try {
-        const respuesta = await fetch('/data.json');
+        const respuesta = await fetch(BASE + '/data.json');
         if (!respuesta.ok) {
           throw new Error('No se pudo cargar la información de productos.');
         }
